@@ -1,0 +1,417 @@
+:root {
+  color-scheme: dark;
+  --page: #050505;
+  --ink: #f2f2ee;
+  --muted-ink: #a8a8a1;
+  --soft-line: rgba(242, 242, 238, 0.3);
+  --faint-line: rgba(242, 242, 238, 0.16);
+  --control-bg: rgba(5, 5, 5, 0.72);
+  --control-border: rgba(242, 242, 238, 0.34);
+  font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+  background: var(--page);
+  color: var(--ink);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --page: #f7f6f2;
+  --ink: #1d1d1b;
+  --muted-ink: #98958d;
+  --soft-line: rgba(29, 29, 27, 0.32);
+  --faint-line: rgba(29, 29, 27, 0.16);
+  --control-bg: rgba(247, 246, 242, 0.78);
+  --control-border: rgba(29, 29, 27, 0.3);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  min-width: 320px;
+  margin: 0;
+  overflow: hidden;
+  background: var(--page);
+}
+
+button {
+  font: inherit;
+}
+
+.site-shell {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow: hidden;
+  background: var(--page);
+  transition: background-color 260ms ease, color 260ms ease;
+}
+
+.theme-toggle {
+  position: fixed;
+  z-index: 10;
+  top: max(18px, env(safe-area-inset-top));
+  right: max(18px, env(safe-area-inset-right));
+  display: flex;
+  width: 52px;
+  height: 52px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--control-border);
+  border-radius: 50%;
+  padding: 0;
+  overflow: hidden;
+  background: var(--control-bg);
+  cursor: pointer;
+  transition: border-color 180ms ease, background-color 260ms ease, transform 180ms ease;
+}
+
+.theme-toggle:hover {
+  border-color: var(--ink);
+  transform: rotate(12deg);
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 4px;
+}
+
+.theme-swatch {
+  display: block;
+  width: 13px;
+  height: 26px;
+}
+
+.theme-swatch-dark {
+  border-radius: 26px 0 0 26px;
+  background: #111;
+}
+
+.theme-swatch-light {
+  border: 1px solid #aaa;
+  border-left: 0;
+  border-radius: 0 26px 26px 0;
+  background: #f7f6f2;
+}
+
+.menu {
+  display: grid;
+  min-height: 100vh;
+  min-height: 100svh;
+  place-items: center;
+  align-content: center;
+  gap: 20px;
+  padding: 72px 24px 28px;
+  background: var(--page);
+  transition: background-color 260ms ease;
+}
+
+.menu[hidden] {
+  display: none;
+}
+
+.menu h1 {
+  margin: 0;
+  color: var(--muted-ink);
+  font-family: "SimSun", "Songti SC", serif;
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-align: center;
+}
+
+.bridge-scene {
+  position: relative;
+  width: min(1220px, 94vw);
+  height: min(62vh, 570px);
+  min-height: 420px;
+}
+
+.bridge-drawing {
+  position: absolute;
+  inset: 0;
+  color: var(--ink);
+}
+
+.bridge-arch {
+  position: absolute;
+  top: 9%;
+  right: 16%;
+  left: 16%;
+  height: 41%;
+  border: 2px solid currentColor;
+  border-bottom: 0;
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+}
+
+.bridge-base {
+  position: absolute;
+  top: 50%;
+  right: 2%;
+  left: 2%;
+  height: 1px;
+  background: currentColor;
+}
+
+.bridge-base::after {
+  position: absolute;
+  top: -5px;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  border-top: 1px solid currentColor;
+  border-right: 1px solid currentColor;
+  content: "";
+  transform: rotate(45deg);
+}
+
+.time-label {
+  position: absolute;
+  top: calc(50% - 12px);
+  right: -2%;
+  color: var(--muted-ink);
+  font-family: "SimSun", "Songti SC", serif;
+  font-size: 15px;
+  transform: translateX(100%);
+}
+
+.hanger {
+  position: absolute;
+  bottom: 50%;
+  width: 1px;
+  border-left: 1px dashed var(--soft-line);
+}
+
+.hanger::before {
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ink);
+  content: "";
+}
+
+.hanger-one { left: 25.5%; height: 28%; }
+.hanger-two { left: 37.7%; height: 38.5%; }
+.hanger-three { left: 50%; height: 41%; }
+.hanger-four { left: 62.3%; height: 38.5%; }
+.hanger-five { left: 74.5%; height: 28%; }
+
+.choice {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  display: flex;
+  width: min(360px, 31vw);
+  min-width: 210px;
+  flex-direction: column;
+  align-items: center;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  transform: translate(-50%, -26px);
+}
+
+.choice-left {
+  left: 16%;
+}
+
+.choice-right {
+  left: 84%;
+}
+
+.choice-node {
+  position: relative;
+  display: block;
+  width: 52px;
+  height: 52px;
+  flex: 0 0 52px;
+  border-radius: 50%;
+}
+
+.choice-node::before,
+.choice-node::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  content: "";
+  transform: translate(-50%, -50%);
+  transition: transform 180ms ease, background-color 180ms ease;
+}
+
+.choice-node::before {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--ink);
+  background: var(--page);
+}
+
+.choice-node::after {
+  width: 6px;
+  height: 6px;
+  background: var(--ink);
+}
+
+.choice:hover .choice-node::before,
+.choice:focus-visible .choice-node::before {
+  background: var(--ink);
+  transform: translate(-50%, -50%) scale(1.16);
+}
+
+.choice:hover .choice-node::after,
+.choice:focus-visible .choice-node::after {
+  background: var(--page);
+}
+
+.choice:focus-visible {
+  outline: 0;
+}
+
+.choice-name {
+  display: block;
+  margin-top: 26px;
+  font-family: "SimSun", "Songti SC", serif;
+  font-size: 23px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-align: center;
+  text-wrap: balance;
+  transition: color 180ms ease;
+}
+
+.choice:hover .choice-name,
+.choice:focus-visible .choice-name {
+  color: var(--muted-ink);
+}
+
+.player {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  background: var(--page);
+  transition: background-color 260ms ease;
+}
+
+.player[hidden] {
+  display: none;
+}
+
+.artwork-video {
+  position: absolute;
+  inset: 0;
+  display: none;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+  transition: filter 260ms ease;
+}
+
+.artwork-video.is-active {
+  display: block;
+}
+
+:root[data-theme="light"] .artwork-video {
+  background: #000;
+  filter: invert(1);
+}
+
+.back-button {
+  position: absolute;
+  z-index: 2;
+  top: max(18px, env(safe-area-inset-top));
+  left: max(18px, env(safe-area-inset-left));
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border: 1px solid var(--control-border);
+  border-radius: 50%;
+  padding: 0;
+  background: var(--control-bg);
+  color: var(--ink);
+  font-size: 27px;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 180ms ease, background 180ms ease;
+}
+
+.back-button:hover {
+  border-color: var(--ink);
+  background: var(--page);
+}
+
+.back-button:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 4px;
+}
+
+@media (max-width: 700px) {
+  .menu {
+    align-content: center;
+    gap: 8px;
+    padding: 76px 12px 18px;
+  }
+
+  .bridge-scene {
+    width: calc(100vw - 24px);
+    height: 530px;
+    min-height: 0;
+  }
+
+  .choice {
+    width: 170px;
+    min-width: 0;
+    transform: translate(-50%, -24px);
+  }
+
+  .choice-left {
+    left: 23%;
+  }
+
+  .choice-right {
+    left: 77%;
+  }
+
+  .choice-name {
+    margin-top: 18px;
+    font-size: 18px;
+    line-height: 1.7;
+  }
+
+  .bridge-arch {
+    right: 23%;
+    left: 23%;
+  }
+
+  .hanger-one { left: 32%; }
+  .hanger-two { left: 41%; }
+  .hanger-four { left: 59%; }
+  .hanger-five { left: 68%; }
+
+  .time-label {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .choice,
+  .back-button,
+  .theme-toggle,
+  .choice-node::before,
+  .choice-node::after,
+  .artwork-video,
+  .site-shell {
+    transition: none;
+  }
+}
