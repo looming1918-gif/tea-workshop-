@@ -3,6 +3,8 @@ const player = document.getElementById('player');
 const backButton = document.getElementById('backButton');
 const themeToggle = document.getElementById('themeToggle');
 const themeColor = document.querySelector('meta[name="theme-color"]');
+const offlineButton = document.getElementById('offlineButton');
+const offlineLabel = document.getElementById('offlineLabel');
 const choices = [...document.querySelectorAll('[data-work]')];
 const videos = {
   five: document.getElementById('fiveVideo'),
@@ -10,6 +12,7 @@ const videos = {
 };
 
 let activeWork = null;
+let serviceWorkerRegistration = null;
 
 const STAGE_WIDTH = 1600;
 const STAGE_HEIGHT = 900;
@@ -34,6 +37,39 @@ function applyTheme(theme, { save = true } = {}) {
   themeToggle.setAttribute('aria-label', isLight ? '切换为黑色界面' : '切换为白色界面');
   themeColor.content = isLight ? '#f7f6f2' : '#050505';
   if (save) localStorage.setItem('tea-workshop-theme', isLight ? 'light' : 'dark');
+}
+
+function setOfflineState(state, detail = '') {
+  offlineButton.classList.toggle('is-ready', state === 'ready');
+  offlineButton.disabled = state === 'downloading' || state === 'ready';
+
+  if (state === 'ready') {
+    offlineLabel.textContent = '已可离线';
+    offlineButton.setAttribute('aria-label', '网站已下载，可以离线使用');
+  } else if (state === 'downloading') {
+    offlineLabel.textContent = detail || '正在下载';
+    offlineButton.setAttribute('aria-label', '正在下载离线内容');
+  } else if (state === 'error') {
+    offlineLabel.textContent = '重新下载';
+    offlineButton.setAttribute('aria-label', '下载失败，点击重新下载');
+  } else {
+    offlineLabel.textContent = '离线下载';
+    offlineButton.setAttribute('aria-label', '下载网站供离线使用');
+  }
+}
+
+async function initializeOfflineSupport() {
+  if (!('serviceWorker' in navigator) || location.protocol === 'file:') return;
+
+  try {
+    serviceWorkerRegistration = await navigator.serviceWorker.register('./sw.js');
+    await navigator.serviceWorker.ready;
+    offlineButton.hidden = false;
+    const worker = serviceWorkerRegistration.active || navigator.serviceWorker.controller;
+    worker?.postMessage({ type: 'GET_OFFLINE_STATUS' });
+  } catch {
+    offlineButton.hidden = true;
+  }
 }
 
 function pauseAll(reset = false) {
@@ -91,6 +127,28 @@ themeToggle.addEventListener('click', () => {
   applyTheme(nextTheme);
 });
 
+offlineButton.addEventListener('click', async () => {
+  if (!serviceWorkerRegistration || offlineButton.classList.contains('is-ready')) return;
+
+  setOfflineState('downloading', '准备下载');
+  await navigator.storage?.persist?.().catch(() => false);
+  const worker = serviceWorkerRegistration.active || navigator.serviceWorker.controller;
+  worker?.postMessage({ type: 'CACHE_OFFLINE_CONTENT' });
+});
+
+navigator.serviceWorker?.addEventListener('message', (event) => {
+  const message = event.data || {};
+  if (message.type === 'OFFLINE_STATUS') {
+    setOfflineState(message.ready ? 'ready' : 'idle');
+  } else if (message.type === 'OFFLINE_PROGRESS') {
+    setOfflineState('downloading', `${message.completed}/${message.total}`);
+  } else if (message.type === 'OFFLINE_READY') {
+    setOfflineState('ready');
+  } else if (message.type === 'OFFLINE_ERROR') {
+    setOfflineState('error');
+  }
+});
+
 Object.values(videos).forEach((video) => {
   video.addEventListener('ended', () => {
     if (video === videos[activeWork]) {
@@ -139,6 +197,7 @@ document.addEventListener('visibilitychange', () => {
 
 applyTheme(localStorage.getItem('tea-workshop-theme') || 'dark', { save: false });
 fitStage();
+initializeOfflineSupport();
 window.addEventListener('resize', fitStage);
 window.visualViewport?.addEventListener('resize', fitStage);
 window.visualViewport?.addEventListener('scroll', fitStage);

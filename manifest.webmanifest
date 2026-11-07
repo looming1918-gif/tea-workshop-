@@ -1,0 +1,12 @@
+{
+  "name": "茶工坊",
+  "short_name": "茶工坊",
+  "description": "桥上的两段时间风景",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#050505",
+  "theme_color": "#050505",
+  "lang": "zh-CN"
+}

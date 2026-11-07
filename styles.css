@@ -107,6 +107,57 @@ button {
   background: #f7f6f2;
 }
 
+.offline-button {
+  position: absolute;
+  z-index: 10;
+  right: 24px;
+  bottom: 24px;
+  display: flex;
+  width: 142px;
+  height: 52px;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  border: 1px solid var(--control-border);
+  border-radius: 26px;
+  padding: 0 16px;
+  background: var(--control-bg);
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: border-color 180ms ease, background-color 260ms ease;
+}
+
+.offline-button[hidden] {
+  display: none;
+}
+
+.offline-button:hover {
+  border-color: var(--ink);
+}
+
+.offline-button:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 4px;
+}
+
+.offline-button:disabled {
+  opacity: 0.72;
+  cursor: wait;
+}
+
+.offline-button.is-ready {
+  cursor: default;
+}
+
+.offline-icon {
+  font-size: 22px;
+  line-height: 1;
+}
+
 .menu {
   position: absolute;
   inset: 0;
@@ -372,6 +423,7 @@ button {
   .choice,
   .back-button,
   .theme-toggle,
+  .offline-button,
   .choice-node::before,
   .choice-node::after,
   .artwork-video,
