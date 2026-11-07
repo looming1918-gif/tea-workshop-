@@ -11,6 +11,22 @@ const videos = {
 
 let activeWork = null;
 
+const STAGE_WIDTH = 1600;
+const STAGE_HEIGHT = 900;
+
+function fitStage() {
+  const viewport = window.visualViewport;
+  const width = viewport ? viewport.width : window.innerWidth;
+  const height = viewport ? viewport.height : window.innerHeight;
+  const offsetLeft = viewport ? viewport.offsetLeft : 0;
+  const offsetTop = viewport ? viewport.offsetTop : 0;
+  const scale = Math.min(width / STAGE_WIDTH, height / STAGE_HEIGHT);
+
+  document.documentElement.style.setProperty('--stage-scale', String(scale));
+  document.documentElement.style.setProperty('--stage-center-x', `${offsetLeft + width / 2}px`);
+  document.documentElement.style.setProperty('--stage-center-y', `${offsetTop + height / 2}px`);
+}
+
 function applyTheme(theme, { save = true } = {}) {
   const isLight = theme === 'light';
   document.documentElement.dataset.theme = isLight ? 'light' : 'dark';
@@ -122,6 +138,10 @@ document.addEventListener('visibilitychange', () => {
 });
 
 applyTheme(localStorage.getItem('tea-workshop-theme') || 'dark', { save: false });
+fitStage();
+window.addEventListener('resize', fitStage);
+window.visualViewport?.addEventListener('resize', fitStage);
+window.visualViewport?.addEventListener('scroll', fitStage);
 
 const initialWork = window.location.hash.slice(1);
 history.replaceState({ work: videos[initialWork] ? initialWork : null }, '');
