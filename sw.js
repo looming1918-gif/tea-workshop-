@@ -1,4 +1,4 @@
-const CACHE_NAME = 'tea-workshop-offline-v4';
+const CACHE_NAME = 'tea-workshop-offline-v5';
 const CORE_FILES = [
   './',
   './index.html',
