@@ -5,6 +5,8 @@ const themeToggle = document.getElementById('themeToggle');
 const themeColor = document.querySelector('meta[name="theme-color"]');
 const offlineButton = document.getElementById('offlineButton');
 const offlineLabel = document.getElementById('offlineLabel');
+const fullscreenButton = document.getElementById('fullscreenButton');
+const fullscreenIcon = fullscreenButton.querySelector('.fullscreen-icon');
 const choices = [...document.querySelectorAll('[data-work]')];
 const videos = {
   five: document.getElementById('fiveVideo'),
@@ -28,6 +30,39 @@ function fitStage() {
   document.documentElement.style.setProperty('--stage-scale', String(scale));
   document.documentElement.style.setProperty('--stage-center-x', `${offsetLeft + width / 2}px`);
   document.documentElement.style.setProperty('--stage-center-y', `${offsetTop + height / 2}px`);
+}
+
+function fullscreenElement() {
+  return document.fullscreenElement || document.webkitFullscreenElement || null;
+}
+
+function updateFullscreenButton() {
+  const isFullscreen = Boolean(fullscreenElement());
+  fullscreenButton.setAttribute('aria-pressed', String(isFullscreen));
+  fullscreenButton.setAttribute('aria-label', isFullscreen ? '退出全屏' : '进入全屏');
+  fullscreenIcon.textContent = isFullscreen ? '\u00D7' : '\u26F6';
+  fullscreenButton.classList.toggle('is-active', isFullscreen);
+  requestAnimationFrame(fitStage);
+}
+
+async function toggleFullscreen() {
+  try {
+    if (fullscreenElement()) {
+      const exit = document.exitFullscreen || document.webkitExitFullscreen;
+      if (exit) await exit.call(document);
+      return;
+    }
+
+    const request = document.documentElement.requestFullscreen
+      || document.documentElement.webkitRequestFullscreen;
+    if (request) {
+      await request.call(document.documentElement);
+    } else {
+      window.scrollTo(0, 1);
+    }
+  } catch {
+    window.scrollTo(0, 1);
+  }
 }
 
 function applyTheme(theme, { save = true } = {}) {
@@ -136,6 +171,10 @@ offlineButton.addEventListener('click', async () => {
   worker?.postMessage({ type: 'CACHE_OFFLINE_CONTENT' });
 });
 
+fullscreenButton.addEventListener('click', toggleFullscreen);
+document.addEventListener('fullscreenchange', updateFullscreenButton);
+document.addEventListener('webkitfullscreenchange', updateFullscreenButton);
+
 navigator.serviceWorker?.addEventListener('message', (event) => {
   const message = event.data || {};
   if (message.type === 'OFFLINE_STATUS') {
@@ -175,6 +214,8 @@ window.addEventListener('popstate', () => {
 });
 
 window.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && fullscreenElement()) return;
+
   if (event.key === 'Escape' && activeWork) {
     backButton.click();
     return;
