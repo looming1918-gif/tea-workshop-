@@ -177,12 +177,12 @@ button {
   left: 0;
   width: 1600px;
   margin: 0;
-  color: var(--muted-ink);
+  color: var(--ink);
   font-family: "SimSun", "Songti SC", "Noto Serif SC", serif;
-  font-size: 18px;
-  font-weight: 400;
+  font-size: 28px;
+  font-weight: 500;
   letter-spacing: 0;
-  line-height: 24px;
+  line-height: 38px;
   text-align: center;
   white-space: nowrap;
 }
@@ -274,7 +274,7 @@ button {
   top: 259px;
   display: flex;
   width: 440px;
-  height: 150px;
+  height: 180px;
   flex-direction: column;
   align-items: center;
   border: 0;
@@ -340,13 +340,19 @@ button {
   width: 440px;
   margin-top: 26px;
   font-family: "SimSun", "Songti SC", "Noto Serif SC", serif;
-  font-size: 23px;
-  font-weight: 400;
+  font-size: 28px;
+  font-weight: 500;
   letter-spacing: 0;
-  line-height: 32px;
+  line-height: 38px;
   text-align: center;
   white-space: nowrap;
   transition: color 180ms ease;
+}
+
+.choice-line {
+  display: block;
+  width: 100%;
+  white-space: nowrap;
 }
 
 .choice:hover .choice-name,
