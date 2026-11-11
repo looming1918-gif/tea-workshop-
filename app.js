@@ -143,8 +143,8 @@ function openWork(work, { updateHistory = true } = {}) {
   video.currentTime = 0;
   video.play().catch(() => {});
   document.title = work === 'five'
-    ? '我在桥上看风景，只问去处'
-    : '我在桥上看风景，不问时间';
+    ? 'On the bridge, watching the view - heart set on where I’m bound'
+    : 'On the bridge, watching the view - at peace, watching time flow';
 
   if (updateHistory) {
     history.pushState({ work }, '', `#${work}`);

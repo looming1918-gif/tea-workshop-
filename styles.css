@@ -217,9 +217,9 @@ button {
   width: 1600px;
   margin: 0;
   color: var(--ink);
-  font-family: "SimSun", "Songti SC", "Noto Serif SC", serif;
+  font-family: Arial, "Microsoft YaHei", sans-serif;
   font-size: 28px;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0;
   line-height: 38px;
   text-align: center;
@@ -378,9 +378,9 @@ button {
   display: block;
   width: 440px;
   margin-top: 26px;
-  font-family: "SimSun", "Songti SC", "Noto Serif SC", serif;
+  font-family: Arial, "Microsoft YaHei", sans-serif;
   font-size: 28px;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0;
   line-height: 38px;
   text-align: center;
